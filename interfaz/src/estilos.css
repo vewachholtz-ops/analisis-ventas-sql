@@ -1,0 +1,204 @@
+/* Mostrador: papel claro con verde abeto para lo que se toca y lo que es dato, y baya para lo que resta
+   (cancelaciones, anomalías). Los gráficos usan un solo tono de dato y gris de contexto. */
+
+@import "tailwindcss";
+@import "@fontsource-variable/schibsted-grotesk";
+@import "@fontsource-variable/jetbrains-mono";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: "Schibsted Grotesk Variable", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "Cascadia Mono", monospace;
+
+  --color-fondo: var(--fondo);
+  --color-superficie: var(--superficie);
+  --color-hundida: var(--hundida);
+  --color-tinta: var(--tinta);
+  --color-tinta-suave: var(--tinta-suave);
+  --color-tinta-tenue: var(--tinta-tenue);
+  --color-linea: var(--linea);
+  --color-acento: var(--acento);
+  --color-acento-hondo: var(--acento-hondo);
+  --color-acento-tinte: var(--acento-tinte);
+  --color-sobre-acento: var(--sobre-acento);
+  --color-baya: var(--baya);
+  --color-baya-tinte: var(--baya-tinte);
+  --color-dato: var(--dato);
+
+  --radius-sm: 4px;
+  --radius-md: 7px;
+  --radius-lg: 10px;
+}
+
+:root {
+  --fondo: #f2f4f1;
+  --superficie: #fcfdfb;
+  --hundida: #e8ece8;
+  --tinta: #16211c;
+  --tinta-suave: #4c5852;
+  --tinta-tenue: #66726b;
+  --linea: #d9dfda;
+  --acento: #14684d;
+  --acento-hondo: #0d513b;
+  --acento-tinte: #e1efe8;
+  --sobre-acento: #ffffff;
+  --baya: #b8324f;
+  --baya-tinte: #fbe7ec;
+  /* gráficos */
+  --dato: #138a61;
+  --contexto: #c3cbc5;
+  --grilla: #e3e8e4;
+  --eje: #c4ccc6;
+  --r1: #e6f2ec;
+  --r2: #c3e2d2;
+  --r3: #94cbb1;
+  --r4: #5fae8b;
+  --r5: #2f8d67;
+  --r6: #13704d;
+  --r7: #0a5238;
+  color-scheme: light;
+}
+
+.dark {
+  --fondo: #0e1411;
+  --superficie: #151d19;
+  --hundida: #1e2924;
+  --tinta: #e5ece8;
+  --tinta-suave: #b0bdb5;
+  --tinta-tenue: #8e9c94;
+  --linea: #2a3630;
+  --acento: #5fc39a;
+  --acento-hondo: #8bd7b6;
+  --acento-tinte: #1a3328;
+  --sobre-acento: #0b1f17;
+  --baya: #f07c96;
+  --baya-tinte: #3a2229;
+  --dato: #2f9a73;
+  --contexto: #3b4741;
+  --grilla: #222d27;
+  --eje: #34413a;
+  --r1: #1c3329;
+  --r2: #1f4b39;
+  --r3: #22644b;
+  --r4: #2f815f;
+  --r5: #4fa07c;
+  --r6: #7fc1a1;
+  --r7: #b6e0cb;
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    border-color: var(--linea);
+  }
+  html,
+  body,
+  #raiz {
+    min-height: 100%;
+  }
+  body {
+    background: var(--fondo);
+    color: var(--tinta);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--acento);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--acento-tinte);
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+}
+
+.cifras {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Observable Plot: sus textos y líneas toman los colores del tema */
+.grafico svg {
+  overflow: visible;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--tinta-tenue);
+  background: transparent;
+}
+.grafico [aria-label="tip"] {
+  color: var(--tinta);
+}
+.grafico [aria-label="tip"] path {
+  fill: var(--superficie);
+  stroke: var(--linea);
+}
+
+/* el recibo de la portada: el borde de abajo cortado como el papel de una caja */
+.recibo {
+  --diente: 7px;
+  mask:
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(2 * var(--diente))
+      var(--diente) repeat-x,
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--diente)) no-repeat;
+}
+
+/* cada línea nueva del recibo sale como si la imprimiera la caja */
+.imprimir {
+  animation: imprimir 260ms ease-out both;
+}
+@keyframes imprimir {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(-4px);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+
+/* CodeMirror */
+.cm-editor {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: transparent;
+}
+.cm-editor.cm-focused {
+  outline: none;
+}
+.cm-scroller {
+  font-family: var(--font-mono);
+  line-height: 1.6;
+}
+.cm-gutters {
+  background: transparent !important;
+  border-right: 1px solid var(--linea) !important;
+  color: var(--tinta-tenue) !important;
+}
+.cm-activeLine,
+.cm-activeLineGutter {
+  background: color-mix(in srgb, var(--acento-tinte) 55%, transparent) !important;
+}
+.cm-cursor {
+  border-left-color: var(--tinta) !important;
+}
+.cm-selectionBackground,
+.cm-focused .cm-selectionBackground {
+  background: color-mix(in srgb, var(--acento) 22%, transparent) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
