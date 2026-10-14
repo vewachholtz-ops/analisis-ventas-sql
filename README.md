@@ -2,7 +2,7 @@
 
 # Mostrador: ventas con SQL
 
-**Dos años de ventas reales de una tienda online, contados con ocho consultas SQL que puedes correr y cambiar en el navegador.**
+**Análisis de ventas, productos y clientes con SQL. Incluye un ejemplo chileno y permite cargar CSV o Excel.**
 
 [**Abrir Mostrador**](https://vewachholtz-ops.github.io/analisis-ventas-sql/) | [**Usar mis ventas**](https://vewachholtz-ops.github.io/analisis-ventas-sql/#mis-ventas) | [Hallazgos](#hallazgos) | [Técnicas de SQL](#técnicas-de-sql-que-usa) | [Cómo se verifica](#cómo-se-verifica) | [Correrlo en tu computador](#correrlo-en-tu-computador)
 
@@ -12,40 +12,21 @@
 ![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-4c5852)
 [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-4c5852)](LICENSE)
 
-<sub><i>SQL analysis (DuckDB) of the UCI Online Retail II dataset, with a web app that runs every query in the browser (DuckDB-WASM): data cleaning, monthly sales, ABC classification, RFM segmentation, cohort retention, returns, countries and market-basket analysis.</i></sub>
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/mostrador-oscuro.png">
-  <img alt="Mostrador: la portada con el titular, el recibo de los dos años (1.067.371 líneas del Excel, 34.454 fuera por limpieza, ventas por 19,7 millones de libras, cancelaciones por 0,72 millones y venta neta de 18,98 millones) con las ocho consultas comprobadas en el navegador, y el gráfico de ventas por mes" src="docs/mostrador-claro.png" width="100%">
-</picture>
-
 </div>
 
-## Qué hace
+## Datos para probar
 
-**Un informe que se lee en cinco minutos.** Ocho preguntas sobre el negocio, cada una respondida en una oración y respaldada por su gráfico, su tabla y la consulta SQL que la produjo.
+- **Papelería chilena:** ventas simuladas entre 2023 y 2025, precios en CLP, productos en español y comunas de Santiago. Desde [Mostrador](https://vewachholtz-ops.github.io/analisis-ventas-sql/), elige «Probar el ejemplo chileno» y «Cargar ejemplo chileno». El [generador](scripts/ventas_ejemplo.py) permite reproducir el archivo; no son ventas de una empresa real.
+- **Caso británico:** [Online Retail II](https://doi.org/10.24432/C5CG6D), datos reales de 2009–2011 publicados por UCI. Sus importes están en GBP. Este conjunto se conserva para comprobar las consultas contra resultados conocidos.
+- **Archivo propio:** CSV o Excel, con selección de columnas, fechas, moneda y devoluciones. El archivo se procesa en el navegador.
 
-▶️ **Cada número se puede comprobar ahí mismo.** «Correr en tu navegador» vuelve a correr la consulta sobre el millón de líneas originales con DuckDB-WASM y la compara con la tabla publicada en [`resultados/`](resultados/). Desde la portada se corren las ocho de una vez.
+## Qué analiza
 
-⌨️ **Una consola SQL para hacer tus propias preguntas.** Las mismas vistas del informe (`lineas`, `ventas`, `cancelaciones`, `nombres`, `abc`, `rfm`, `crudo`), autocompletado de tablas y columnas, ejemplos para partir, gráfico automático cuando el resultado tiene forma de gráfico, descarga en CSV y un enlace para compartir la consulta.
-
-**El mismo análisis con tus ventas.** «Usar mis ventas» lee un CSV o un Excel de cualquier tienda, adivina qué es cada columna (factura, fecha, producto, cantidad, precio, cliente, lugar), deja elegir el formato de fechas, números, devoluciones y moneda, y arma las ocho secciones con tus números. Después la consola queda trabajando sobre tu archivo. Para probarlo sin datos propios hay un archivo inventado de una papelería.
-
-**Nada sale de tu computador.** No hay servidor: la base de datos corre en la página, tu archivo se lee ahí mismo y los datos de ejemplo se bajan una vez (6 MB).
-
-**Limpia antes de analizar.** 1.067.371 líneas reales con días repetidos, ajustes contables, muestras gratis y cancelaciones. Cinco reglas, cada una con su consulta.
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/consola-oscuro.png">
-  <img alt="La consola SQL: una consulta de ventas netas por día de la semana, su gráfico de barras (el sábado casi no hay ventas) y el panel con las vistas disponibles" src="docs/consola-claro.png" width="100%">
-</picture>
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/mis-ventas-oscuro.png">
-  <img alt="Usar mis ventas: un CSV de 18.812 filas cargado, las columnas adivinadas por sus encabezados (N° documento como factura, SKU como código, Producto como nombre), una vista previa del archivo y las opciones de fechas día-mes-año y números con punto de miles" src="docs/mis-ventas-claro.png" width="100%">
-</picture>
+Ventas mensuales, productos ABC, clientes RFM, retención, devoluciones, lugares y productos comprados juntos. La consola permite modificar las consultas y descargar sus resultados.
 
 ## Hallazgos
+
+Estos resultados corresponden exclusivamente al [caso británico](https://vewachholtz-ops.github.io/analisis-ventas-sql/#caso-uci), en libras esterlinas.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="resultados/ventas-mensuales-oscuro.png">

@@ -17,11 +17,11 @@ const libra = (n: number) => `£ ${numero(n, 0)}`
 
 export function Portada() {
   return (
-    <header id="inicio" className="scroll-mt-6 pt-2 pb-12">
+    <header id="caso-uci" className="scroll-mt-6 pt-2 pb-12">
       <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_21rem] lg:gap-12">
         <div className="pt-2 lg:pt-6">
           <h1 className="max-w-[17ch] text-[2.35rem] leading-[1.06] font-semibold tracking-[-0.025em] sm:text-[2.9rem]">
-            Dos años de una tienda de regalos online, contados con SQL
+            Ventas de una tienda del Reino Unido
           </h1>
           <p className="mt-5 max-w-[56ch] text-[1.1rem] leading-relaxed text-tinta-suave">
             Un millón de líneas de ventas reales de una tienda británica, de diciembre de 2009 a diciembre de 2011. Ocho consultas

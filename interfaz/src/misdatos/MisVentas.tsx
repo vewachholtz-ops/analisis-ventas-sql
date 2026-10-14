@@ -75,8 +75,7 @@ export function MisVentas() {
     <div className="pt-2 pb-16">
       <h1 className="text-[2rem] leading-tight font-semibold tracking-[-0.02em]">Usar mis ventas</h1>
       <p className="mt-2 max-w-[62ch] text-[1.02rem] text-tinta-suave">
-        Sube un archivo de ventas y Mostrador hace los mismos ocho análisis con tus números. El archivo no sale de tu computador: DuckDB lo lee aquí,
-        en el navegador.
+        Carga el ejemplo de una papelería chilena o abre un CSV o Excel propio. El análisis se hace en tu navegador.
       </p>
 
       <Paso numero={1} titulo="Tu archivo">
@@ -115,7 +114,7 @@ export function MisVentas() {
 
       {archivo && (
         <Paso numero={2} titulo="Qué es cada columna">
-          <p className="-mt-1 mb-4 max-w-[62ch] text-[14px] text-tinta-suave">Las adiviné por los encabezados; revísalas. Una fila del archivo debe ser una línea de venta: un producto de una compra.</p>
+          <p className="-mt-1 mb-4 max-w-[62ch] text-[14px] text-tinta-suave">Revisa las columnas detectadas. Cada fila debe corresponder a un producto de una compra.</p>
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-[22rem_minmax(0,1fr)]">
             <div className="space-y-3">
               {CAMPOS.map((d) => (
@@ -269,8 +268,9 @@ function Zona({ alElegir, alProbar, ocupado, paso }: { alElegir: (f: File) => vo
           </p>
           <p className="mt-1 text-[13px] text-tinta-tenue">CSV o Excel (.xlsx), con una fila por línea de venta y los nombres de las columnas en la primera fila.</p>
           <button onClick={alProbar} className="mt-4 text-[13.5px] text-tinta-suave underline decoration-[var(--eje)] underline-offset-2 hover:text-tinta">
-            ¿No tienes uno a mano? Prueba con las ventas inventadas de una papelería
+            Cargar ejemplo chileno
           </button>
+          <p className="mt-2 text-[13px] text-tinta-tenue">Papelería en Santiago · datos simulados · pesos chilenos (CLP).</p>
         </>
       )}
     </div>
@@ -359,11 +359,11 @@ function Resumen({ a, archivo }: { a: Analisis; archivo: string }) {
         tamano="sm"
         onClick={() => {
           void usarFuente({ tipo: 'ejemplo' })
-          location.hash = '#inicio'
+          location.hash = '#caso-uci'
         }}
       >
         <RotateCcw aria-hidden />
-        Volver a la tienda de ejemplo
+        Ver el caso británico
       </Boton>
     </div>
   )

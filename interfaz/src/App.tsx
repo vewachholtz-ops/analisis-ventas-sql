@@ -1,5 +1,4 @@
-// Mostrador: el informe (portada y ocho secciones) y la consola SQL, en una sola página. La dirección decide qué se
-// ve: #consola abre la consola (con ?sql=… trae una consulta), cualquier otra cosa es el informe y su sección.
+// La dirección selecciona inicio, archivo propio, consola o una sección del caso británico.
 import { Check, ExternalLink, Menu, Monitor, Moon, SquareTerminal, Sun, Upload, X } from 'lucide-react'
 import { lazy, Suspense, useEffect, useState, useSyncExternalStore } from 'react'
 import { useEstadoDuckDB, useFuente } from './lib/duckdb'
@@ -7,6 +6,7 @@ import { cambiarTema, type Tema, useTema } from './lib/tema'
 import { cn } from './lib/utiles'
 import { INDICE, Informe } from './secciones/Informe'
 import { Portada, REPO } from './secciones/Portada'
+import { Inicio } from './secciones/Inicio'
 
 // la consola (CodeMirror y DuckDB) y «Usar mis ventas» se bajan solo si alguien los abre
 const Consola = lazy(() => import('./consola/Consola').then((m) => ({ default: m.Consola })))
@@ -27,7 +27,7 @@ function useSeccionActiva(activo: boolean) {
   const [id, setId] = useState('inicio')
   useEffect(() => {
     if (!activo) return
-    const elementos = ['inicio', ...INDICE.map((s) => s.id)].map((i) => document.getElementById(i)).filter(Boolean) as HTMLElement[]
+    const elementos = ['caso-uci', ...INDICE.map((s) => s.id)].map((i) => document.getElementById(i)).filter(Boolean) as HTMLElement[]
     const observador = new IntersectionObserver(
       (entradas) => {
         for (const e of entradas) if (e.isIntersecting) setId(e.target.id)
@@ -44,7 +44,7 @@ export function App() {
   const hash = useHash()
   const enConsola = hash.startsWith('#consola')
   const enMisVentas = hash.startsWith('#mis-ventas')
-  const pagina = enConsola ? 'consola' : enMisVentas ? 'mis-ventas' : 'informe'
+  const pagina = enConsola ? 'consola' : enMisVentas ? 'mis-ventas' : !hash || hash === '#inicio' ? 'inicio' : 'informe'
   const sql = enConsola ? (new URLSearchParams(hash.split('?')[1] ?? '').get('sql') ?? undefined) : undefined
   const activa = useSeccionActiva(pagina === 'informe')
   const [menu, setMenu] = useState(false)
@@ -80,7 +80,7 @@ export function App() {
             href={enConsola ? '#inicio' : '#consola'}
             className="ml-auto inline-flex h-9 items-center gap-1.5 rounded-md px-2.5 text-[13.5px] font-medium text-acento hover:bg-hundida"
           >
-            {enConsola ? 'Informe' : (
+            {enConsola ? 'Inicio' : (
               <>
                 <SquareTerminal className="size-4" aria-hidden />
                 Consola
@@ -117,7 +117,7 @@ export function App() {
             <Suspense fallback={<p className="pt-2 text-tinta-tenue">Abriendo…</p>}>
               <MisVentas />
             </Suspense>
-          ) : (
+          ) : pagina === 'inicio' ? <Inicio /> : (
             <>
               <Portada />
               <Informe />
@@ -152,7 +152,11 @@ function Indice({ activa }: { activa: string }) {
     <nav aria-label="Índice" className="mt-8">
       <a href="#inicio" className={enlace(activa === 'inicio')} aria-current={activa === 'inicio' ? 'location' : undefined}>
         <span className="w-5" aria-hidden />
-        Resumen
+        Inicio
+      </a>
+      <a href="#caso-uci" className={enlace(activa === 'caso-uci')} aria-current={activa === 'caso-uci' ? 'location' : undefined}>
+        <span className="w-5" aria-hidden />
+        Caso británico · GBP
       </a>
       <ol className="mt-0.5 space-y-0.5">
         {INDICE.map((s) => (
@@ -191,6 +195,7 @@ function EstadoSql() {
     <div className="text-[12.5px] leading-snug">
       <p className="font-medium text-tinta">SQL en tu navegador</p>
       {fuente.tipo === 'mios' && <p className="mt-0.5 text-tinta-suave">Con tus datos: {fuente.config.archivo}</p>}
+      {fuente.tipo === 'ejemplo' && <p className="mt-0.5 text-tinta-suave">Datos SQL: Reino Unido · GBP</p>}
       <p className={cn('mt-0.5 text-tinta-tenue', e.fase === 'error' && 'text-baya')} role="status">
         {e.fase === 'sin-cargar' && 'DuckDB se carga cuando corres la primera consulta.'}
         {e.fase === 'cargando' && `${e.paso}${e.avance !== undefined ? ` ${Math.round(e.avance * 100)} %` : ''}…`}
@@ -239,7 +244,7 @@ function SelectorTema() {
 function Credito() {
   return (
     <p className="text-[12px] leading-snug text-tinta-tenue">
-      Datos:{' '}
+      Ejemplo chileno: datos simulados. Caso británico:{' '}
       <a href="https://doi.org/10.24432/C5CG6D" target="_blank" rel="noreferrer" className="underline decoration-[var(--eje)] underline-offset-2 hover:text-tinta">
         Online Retail II
       </a>{' '}

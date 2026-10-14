@@ -67,7 +67,7 @@ def pagina(navegador):
 
 
 def test_las_ocho_consultas_dan_lo_publicado(pagina, url):
-    pagina.goto(url)
+    pagina.goto(f"{url}#caso-uci")
     pagina.get_by_role("button", name="Correr las 8 consultas aquí").click()
     pagina.get_by_text("8 de 8 iguales a resultados/").wait_for(timeout=180_000)
     estados = pagina.locator("section[id] [role=status]").all_inner_texts()
@@ -95,8 +95,10 @@ def test_la_consola_corre_sql_y_muestra_errores(pagina, url):
 
 def test_mis_ventas_con_el_csv_de_ejemplo(pagina, url):
     # el CSV de la papelería: punto y coma, fechas dd-mm-aaaa, pesos con punto de miles, devoluciones negativas
-    pagina.goto(f"{url}#mis-ventas")
-    pagina.get_by_role("button", name="Prueba con las ventas inventadas").click()
+    pagina.goto(url)
+    assert "Chile · CLP · Datos simulados" in pagina.locator("main").inner_text()
+    pagina.get_by_role("link", name="Probar el ejemplo chileno").click()
+    pagina.get_by_role("button", name="Cargar ejemplo chileno").click()
     pagina.get_by_role("button", name="Analizar mis ventas").click(timeout=180_000)
     pagina.get_by_role("heading", name="Tu informe").wait_for(timeout=180_000)
     limpieza = pagina.locator("#mi-limpieza").inner_text()
